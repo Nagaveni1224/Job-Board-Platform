@@ -29,6 +29,7 @@ import MyJobs from "./pages/MyJobs";
 import JobApplications from "./pages/JobApplications";
 import AdminDashboard from "./pages/AdminDashboard";
 import CreateJob from "./pages/CreateJob";
+import API from "./services/api";
 
 function App() {
   const [user, setUser] = useState(
@@ -51,8 +52,8 @@ function App() {
   useEffect(() => {
     const fetchLatestJobs = async () => {
       try {
-        const response = await fetch("/api/jobs/verified");
-        const data = await response.json();
+        const response = await API.get("/jobs/verified");
+        const data = response.data;
 
         const jobs = Array.isArray(data) ? data : data.jobs || [];
 
