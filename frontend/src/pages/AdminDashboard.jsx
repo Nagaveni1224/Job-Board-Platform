@@ -6,6 +6,13 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [employerName, setEmployerName] = useState("");
+const [employerEmail, setEmployerEmail] = useState("");
+const [employerPassword, setEmployerPassword] = useState("");
+const [employerMessage, setEmployerMessage] = useState("");
+const [employerError, setEmployerError] = useState("");
+const [creatingEmployer, setCreatingEmployer] = useState(false);
+
   const fetchJobs = async () => {
     try {
       const response = await API.get("/jobs/employer");
@@ -37,6 +44,43 @@ const AdminDashboard = () => {
       alert(error.response?.data?.message || "Failed to verify job.");
     }
   };
+
+  const createEmployer = async (e) => {
+  e.preventDefault();
+
+  setEmployerMessage("");
+  setEmployerError("");
+
+  if (!employerName || !employerEmail || !employerPassword) {
+    setEmployerError("Please fill in all employer details.");
+    return;
+  }
+
+  setCreatingEmployer(true);
+
+  try {
+    await API.post("/admin/employers", {
+      name: employerName,
+      email: employerEmail,
+      password: employerPassword,
+    });
+
+    setEmployerMessage("Employer account created successfully!");
+
+    setEmployerName("");
+    setEmployerEmail("");
+    setEmployerPassword("");
+  } catch (error) {
+    console.error(error);
+
+    setEmployerError(
+      error.response?.data?.message ||
+        "Failed to create employer account.",
+    );
+  } finally {
+    setCreatingEmployer(false);
+  }
+};
 
   const verifiedJobs = jobs.filter((job) => job.isVerified).length;
 
@@ -156,6 +200,75 @@ const AdminDashboard = () => {
             </p>
           </div>
         </div>
+
+        {/* Create Employer */}
+<div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-10">
+  <div className="flex items-center gap-3 mb-6">
+    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl">
+      🏢
+    </div>
+
+    <div>
+      <h2 className="text-2xl font-bold text-gray-900">
+        Create Employer Account
+      </h2>
+
+      <p className="text-gray-500 mt-1">
+        Admin can create employer accounts for approved employers.
+      </p>
+    </div>
+  </div>
+
+  {employerMessage && (
+    <div className="bg-green-50 border border-green-200 text-green-700 rounded-xl px-4 py-3 mb-5">
+      {employerMessage}
+    </div>
+  )}
+
+  {employerError && (
+    <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 mb-5">
+      {employerError}
+    </div>
+  )}
+
+  <form
+    onSubmit={createEmployer}
+    className="grid md:grid-cols-3 gap-4"
+  >
+    <input
+      type="text"
+      value={employerName}
+      onChange={(e) => setEmployerName(e.target.value)}
+      placeholder="Employer Name"
+      className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+
+    <input
+      type="email"
+      value={employerEmail}
+      onChange={(e) => setEmployerEmail(e.target.value)}
+      placeholder="Employer Email"
+      className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+
+    <input
+      type="password"
+      value={employerPassword}
+      onChange={(e) => setEmployerPassword(e.target.value)}
+      placeholder="Temporary Password"
+      minLength={6}
+      className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+
+    <button
+      type="submit"
+      disabled={creatingEmployer}
+      className="md:col-span-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-xl font-bold transition"
+    >
+      {creatingEmployer ? "Creating Employer..." : "Create Employer"}
+    </button>
+  </form>
+</div>
 
         {/* Job Listings */}
         <div className="flex items-center justify-between mb-6">

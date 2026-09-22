@@ -197,18 +197,13 @@ const Register = () => {
                 Account Type
               </label>
 
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              >
-                <option value="jobseeker">Job Seeker</option>
-                <option value="employer">Employer</option>
-              </select>
+              <div className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-4 py-3.5">
+                Job Seeker
+              </div>
 
               <p className="text-xs text-slate-400 mt-2">
-                Choose Job Seeker if you want to apply for jobs or Employer if
-                you want to create job listings.
+                New accounts are registered as Job Seekers. Employer accounts
+                are managed separately.
               </p>
             </div>
 
